@@ -2,8 +2,8 @@
   "dependencies": {
     "browser-request": "^0.3.3",
     "google-spreadsheets": "^0.5.1",
-    "immutable": "^3.8.1",
     "jstz": "^1.0.7",
+    "lodash": "^4.17.2",
     "moment": "^2.16.0",
     "moment-timezone": "^0.5.9",
     "next": "^1.1.1"
