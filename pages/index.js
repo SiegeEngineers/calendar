@@ -5,7 +5,8 @@ import css, { merge } from 'next/css'
 import GSpread from 'google-spreadsheets'
 import moment from 'moment-timezone'
 import jstz from 'jstz'
-
+import Head from 'next/head'
+import ReactGA from 'react-ga'
 
 const gKey = '19FQEKyzV7hHqDxJ3BSdNDNmxAa-otUXhmhHoJhv31wg'
 
@@ -92,6 +93,21 @@ class FilterSelect extends React.Component {
   }
 }
 
+class TimezoneSelector extends React.Component {
+  render () {
+    /* Server side loading */
+    if (!this.props.active) return <span></span>
+    
+    const local = moment.tz(jstz.determine().name()).zoneAbbr()
+    const other = this.props.active ==  'GMT' ? local : 'GMT'
+    return <span>
+      &nbsp;(<span className={link} onClick={() => 
+        {localStorage.setItem('timezone', other); this.props.toggle(other)}}>switch to {other}</span>)
+    </span>
+  }
+  
+}
+
 export default class extends React.Component {
   constructor(props) {
     super(props);
@@ -100,7 +116,13 @@ export default class extends React.Component {
   
   componentDidMount() {
     moment.locale(window.navigator.language)
-    this.setState({timezone: jstz.determine()})
+    
+    this.setState({timezone: localStorage.getItem('timezone') || moment.tz(jstz.determine().name()).zoneAbbr()})
+    
+    // Save to analytics on each mount
+    ReactGA.initialize('UA-88082608-1')
+    ReactGA.set({ page: window.location.pathname });
+    ReactGA.pageview(window.location.pathname);
   }
   
   static async getInitialProps ({ req }) {
@@ -130,7 +152,11 @@ export default class extends React.Component {
     } else {
       if(this.state.filter2k) {
         const players2k = _.values(d.players).filter((p) => ((p.rating || ' ')[0] == '2')).map((p) => p.name)
-        results = results.filter((match) => (_.intersection(match.team.split(','), players2k).length && _.intersection(match.team_2.split(','), players2k).length))
+        const getRating = (p) => (parseInt(_.get(d.players, [p, 'rating'], '1600')))
+        const getAverage = (arr) => (arr.reduce((x, y)=>x+y,0) / arr.length)
+        
+        results = results.filter((match) => 
+          getAverage((match.team.split(',').map(getRating).concat(match.team_2.split(',').map(getRating)))) > 2000)
       }
     }
     
@@ -138,18 +164,33 @@ export default class extends React.Component {
       // unimplemented
     }
     
+    // Remove expired matches
+    const expired = moment().subtract(6, 'hours')
+    results = results.filter((match) => moment(new Date(match.time + ' UTC')) > expired)
+    
     return results
   }
 
   render () {
     const d = this.props
     const matches = this.filterMatches(d)
+    
+    // Set timezone
+    if(this.state.timezone) {
+      moment.tz.setDefault(this.state.timezone)
+    }
+
     return (
     <div className={general}>
+        <Head>
+          <title>Professional Age of Empires 2 calendar</title>
+          <link rel="icon" href="static/favicon.ico" />
+        </Head>
         <div className={topNoteStyle}>
           <b>Professional Age of Empires 2 Calendar</b>
-          <br/>new to pro AoE2? <a href="test">learn more</a>
-          <br/>{this.state.timezone ? 'all times in ' + this.state.timezone.name() : ''}
+          <br/>new to pro AoE2? <a href="https://medium.com/@charlieoffenbacher/5-minute-intro-to-pro-age-of-empires-2-94de4b3573b#.tc3kgqu8p" className={link}>learn more</a>
+          <br/>{this.state.timezone ? 'all times in ' + this.state.timezone : ''}
+          <TimezoneSelector active={this.state.timezone} toggle={(tz) => this.setState({timezone: tz})} />
         </div>
         <hr />
         <div className={matchFilters}>
@@ -171,14 +212,16 @@ export default class extends React.Component {
             options={_.uniq(_.flattenDeep(matches.map((match) => ([...match.team.split(','), ...match.team_2.split(',')]))))}
             handler={(v)=>this.setState({filterPlayer: v})}/>
         </div>
-        {matches.map(match => (
+        {matches.length ? matches.map(match => (
           <div className={matchStyle} onClick={() => test(d)}>
               <hr className={matchDividerStyle}/>
               <Team d={d} team={match.team} match={match} side='left'/>
               <div className={divider}> {this.state.timezone ? 
                 <div>
                   <div className={dateStyle}>{moment(new Date(match.time + ' UTC')).format('ll')}</div>
-                  <div>{moment(new Date(match.time + ' UTC')).format('LT')}</div>
+                  <div>{this.state.timezone == 'GMT'
+                    ? moment(new Date(match.time + ' UTC')).format('HH:mm')
+                    : moment(new Date(match.time + ' UTC')).format('LT')}</div>
                 </div>
                 : '...'}</div>
               <Team d={d} team={match.team_2} match={match} side='right'/>
@@ -186,10 +229,15 @@ export default class extends React.Component {
                 {match.event} - {match.round} - {match.format}
               </div>
               <div className={streamStyle}>
-                {match.streams.split(',').filter(stream => stream).map((stream) => (<Stream stream={_.get(d, ['streamers', stream])} />))}
+                {match.streams.split(',').map(stream => _.get(d, ['streamers', stream])).filter(stream => stream !== undefined).map(
+                  (stream) => (<Stream stream={stream} />))}
               </div>
           </div>
-        ))}
+        ))
+        : <div className={merge([matchStyle, css({textAlign: 'center'})])}> 
+          No matches scheduled for these filters at the moment 
+        </div>  
+        }
         <div className={footerStyle}>
           <hr />
           <span>made by patao with love</span>
@@ -261,3 +309,4 @@ const matchFilters = css({textAlign: 'center', marginTop:'1em'})
 const left = css({float: 'left', textAlign: 'right', width: 80 * 5 + 'px'})
 const right = css({float: 'right', textAlign: 'left', width: 80 * 5 + 'px'})
 const flag = css({height: '1em', paddingTop: '5px', margin: '0px 0.5em 0px 0.5em', filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'})
+const link = css({color: 'blue', textDecoration: 'underline', cursor: 'pointer', userSelect: 'none'})
