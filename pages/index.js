@@ -108,6 +108,32 @@ class TimezoneSelector extends React.Component {
   
 }
 
+class Match extends React.Component {
+  render () {
+    const { d, match } = this.props
+    return (
+      <hr className={matchDividerStyle}/>
+      <Team d={d} team={match.team} match={match} side='left'/>
+      <div className={divider}> {this.state.timezone ?
+        <div>
+          <div className={dateStyle}>{moment(new Date(match.time + ' UTC')).format('ll')}</div>
+          <div>{this.state.timezone == 'GMT'
+            ? moment(new Date(match.time + ' UTC')).format('HH:mm')
+            : moment(new Date(match.time + ' UTC')).format('LT')}</div>
+        </div>
+        : '...'}</div>
+      <Team d={d} team={match.team_2} match={match} side='right'/>
+      <div className={eventStyle}>
+        {match.event} - {match.round} - {match.format}
+      </div>
+      <div className={streamStyle}>
+        {match.streams.split(',').map(stream => _.get(d, ['streamers', stream])).filter(stream => stream !== undefined).map(
+          (stream) => (<Stream stream={stream} />))}
+      </div>
+    )
+  }
+}
+
 export default class extends React.Component {
   constructor(props) {
     super(props);
@@ -215,24 +241,7 @@ export default class extends React.Component {
         </div>
         {matches.length ? matches.map(match => (
           <div className={matchStyle} onClick={() => test(d)}>
-              <hr className={matchDividerStyle}/>
-              <Team d={d} team={match.team} match={match} side='left'/>
-              <div className={divider}> {this.state.timezone ? 
-                <div>
-                  <div className={dateStyle}>{moment(new Date(match.time + ' UTC')).format('ll')}</div>
-                  <div>{this.state.timezone == 'GMT'
-                    ? moment(new Date(match.time + ' UTC')).format('HH:mm')
-                    : moment(new Date(match.time + ' UTC')).format('LT')}</div>
-                </div>
-                : '...'}</div>
-              <Team d={d} team={match.team_2} match={match} side='right'/>
-              <div className={eventStyle}>
-                {match.event} - {match.round} - {match.format}
-              </div>
-              <div className={streamStyle}>
-                {match.streams.split(',').map(stream => _.get(d, ['streamers', stream])).filter(stream => stream !== undefined).map(
-                  (stream) => (<Stream stream={stream} />))}
-              </div>
+            <Match d={d} match={match} />
           </div>
         ))
         : <div className={merge([matchStyle, css({textAlign: 'center'})])}> 
