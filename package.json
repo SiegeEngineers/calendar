@@ -7,7 +7,8 @@
     "moment": "^2.16.0",
     "moment-timezone": "^0.5.9",
     "next": "^1.1.1",
-    "react-ga": "^2.1.2"
+    "react-ga": "^2.1.2",
+    "react-media": "^1.4.0"
   },
   "scripts": {
     "dev": "next",

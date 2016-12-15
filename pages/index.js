@@ -7,6 +7,7 @@ import moment from 'moment-timezone'
 import jstz from 'jstz'
 import Head from 'next/head'
 import ReactGA from 'react-ga'
+import Media from 'react-media'
 
 const gKey = '19FQEKyzV7hHqDxJ3BSdNDNmxAa-otUXhmhHoJhv31wg'
 
@@ -36,11 +37,8 @@ class Player extends React.Component {
     }
     
     const elo = <EloFormat elo={p.rating || '?'} {...this.props} />
-    const img = <img className={merge(flag, {
-                      float: this.props.side == 'left' ? 'right': 'left',
-                      margin: this.props.side == 'left' ? '0 0 0 0.5em': '0 0.5em 0 0'
-    })} 
-                  src={_.get(d, ['flags', p.country, 'url'])}/>
+    const img = <img className={merge(flag, flagSides[this.props.side])}
+                     src={_.get(d, ['flags', p.country, 'url'])} />
     
     const adjustForTeamSize = css({fontSize: Math.max(Math.ceil(10 + 20 / this.props.teamSize), 20) + 'pt', marginTop: this.props.idx ? '0.5em': '0em'})
     
@@ -108,28 +106,119 @@ class TimezoneSelector extends React.Component {
   
 }
 
-class Match extends React.Component {
+/**
+ * Render match time in the user's own timezone.
+ */
+class MatchTime extends React.Component {
   render () {
-    const { d, match } = this.props
-    return (
-      <hr className={matchDividerStyle}/>
-      <Team d={d} team={match.team} match={match} side='left'/>
-      <div className={divider}> {this.state.timezone ?
+    const { time, timezone } = this.props
+
+    const dateStr = moment(new Date(time + ' UTC')).format('ll')
+    const timeStr = timezone == 'GMT'
+      ? moment(new Date(time + ' UTC')).format('HH:mm')
+      : moment(new Date(time + ' UTC')).format('LT')
+
+      return timezone ? (
         <div>
-          <div className={dateStyle}>{moment(new Date(match.time + ' UTC')).format('ll')}</div>
-          <div>{this.state.timezone == 'GMT'
-            ? moment(new Date(match.time + ' UTC')).format('HH:mm')
-            : moment(new Date(match.time + ' UTC')).format('LT')}</div>
+          <div className={dateStyle}>{dateStr}</div>
+          <div>{timeStr}</div>
         </div>
-        : '...'}</div>
-      <Team d={d} team={match.team_2} match={match} side='right'/>
-      <div className={eventStyle}>
-        {match.event} - {match.round} - {match.format}
-      </div>
+      ) : (
+        <span>...</span>
+      )
+  }
+}
+
+/**
+ * Render icons for a list of streams.
+ */
+class MatchStreams extends React.Component {
+  render () {
+    const { d, streams } = this.props
+    return (
       <div className={streamStyle}>
-        {match.streams.split(',').map(stream => _.get(d, ['streamers', stream])).filter(stream => stream !== undefined).map(
-          (stream) => (<Stream stream={stream} />))}
+        {streams.split(',')
+          .map(stream => _.get(d, ['streamers', stream]))
+          .filter(stream => stream !== undefined)
+          .map((stream) => (
+            <Stream stream={stream} />
+          ))
+        }
       </div>
+    )
+  }
+}
+
+/**
+ * Match display on a portrait-style screen.
+ */
+class MatchMobile extends React.Component {
+  render () {
+    const { d, match, timezone } = this.props
+
+    return (
+      <div className={matchStyle} onClick={() => test(d)}>
+        <hr className={matchDividerStyle} />
+        <div className={mobileMatchTimeStyle}>
+          <MatchTime time={match.time} timezone={timezone} />
+        </div>
+        <div className={eventStyle}>
+          {match.event} - {match.round} - {match.format}
+        </div>
+        <Team d={d} team={match.team} match={match} side='right'/>
+        <Team d={d} team={match.team_2} match={match} side='left'/>
+        <MatchStreams d={d} streams={match.streams} />
+      </div>
+    )
+  }
+}
+
+/**
+ * Match display on a landscape-style screen.
+ */
+class MatchDesktop extends React.Component {
+  render () {
+    const { d, match, timezone } = this.props
+
+    return (
+      <div className={matchStyle} onClick={() => test(d)}>
+        <hr className={matchDividerStyle}/>
+        <Team d={d} team={match.team} match={match} side='left'/>
+        <div className={divider}>
+          <MatchTime time={match.time} timezone={timezone} />
+        </div>
+        <Team d={d} team={match.team_2} match={match} side='right'/>
+        <div className={eventStyle}>
+          {match.event} - {match.round} - {match.format}
+        </div>
+        <MatchStreams d={d} streams={match.streams} />
+      </div>
+    )
+  }
+}
+
+/**
+ * Container for a list of matches.
+ */
+class MatchList extends React.Component {
+  render () {
+    const { d, timezone, matches } = this.props
+    return (
+      <Media query={mobileBreakpoint}>
+        {isMobile => {
+          const MatchComponent = isMobile ? MatchMobile : MatchDesktop
+          return (
+            <div>
+              {matches.map(match => (
+                <MatchComponent
+                  d={d}
+                  match={match}
+                  timezone={timezone} />
+              ))}
+            </div>
+          )
+        }}
+      </Media>
     )
   }
 }
@@ -239,15 +328,16 @@ export default class extends React.Component {
             options={_.uniq(_.flattenDeep(matches.map((match) => ([...match.team.split(','), ...match.team_2.split(',')]))))}
             handler={(v)=>this.setState({filterPlayer: v})}/>
         </div>
-        {matches.length ? matches.map(match => (
-          <div className={matchStyle} onClick={() => test(d)}>
-            <Match d={d} match={match} />
+        {matches.length ? (
+          <MatchList
+            d={d}
+            timezone={this.state.timezone}
+            matches={matches} />
+        ) : (
+          <div className={merge([matchStyle, css({textAlign: 'center'})])}>
+            No matches scheduled for these filters at the moment
           </div>
-        ))
-        : <div className={merge([matchStyle, css({textAlign: 'center'})])}> 
-          No matches scheduled for these filters at the moment 
-        </div>  
-        }
+        )}
         <div className={footerStyle}>
           <hr />
           <span>made by patao with love</span>
@@ -291,18 +381,21 @@ const getRows = (worksheetId, keyName) => {
 
 
 // Media query for styles for mobile devices.
-const mobile = '@media (max-width: 768px)'
+const mobileBreakpoint = '(max-width: 768px)'
+const mobile = `@media ${mobileBreakpoint}`
 
 // Styling
 const general = css({
   fontFamily: 'Consolas, monaco, monospace',
   width: 80 * 12 + 'px',
-  maxWidth: '100%',
   paddingLeft: 10 + 'px',
   paddingRight: 10 + 'px',
   margin: 'auto',
   color: '#333333',
-  boxSizing: 'border-box'
+  [mobile]: {
+    maxWidth: '100%',
+    boxSizing: 'border-box'
+  }
 })
 
 const filterSelect = css({
@@ -321,17 +414,48 @@ const filterSwitchOption = css({color: '#C8C8C8', cursor: 'pointer'})
 const filterSwitch = css({textAlign: 'center', display:'inline-block', margin: '0em 1em 0em 1em'})
 const streamStyle = css({textAlign: 'center', marginTop: '1em'})
 const dateStyle = css({fontSize: '12pt'})
-const teamStyle = css({float: 'left', width: 80 * 5 + 'px'})
+const teamStyle = css({
+  float: 'left',
+  width: 80 * 5 + 'px',
+  [mobile]: {
+    width: '100%'
+  }
+})
 const player = css({fontSize: '30pt', fontVariant: 'small-caps'})
 const eloStyle = css({fontSize: '14pt', color: '#C8C8C8', marginLeft: '0.25em', marginRight: '0.25em'})
 const divider = css({fontSize: '16pt', paddingTop: '2px', textAlign: 'center', float: 'left', width: 80 * 2 + 'px'})
+const mobileMatchTimeStyle = merge([divider, css({ width: '100%' })])
 const topNoteStyle = css({textAlign: 'center', fontSize: '10pt', fontStyle: 'italic'})
 const matchStyle = css({clear: 'both', paddingTop: '2em'})
 const matchDividerStyle = css({width: '100px', marginBottom: '2em'})
 const eventStyle = css({clear: 'both', textAlign: 'center', fontSize: '10pt', fontWeight: 'bold', paddingTop:'1em'})
 const footerStyle = css({width: '100%', marginTop: '2em', textAlign: 'center'})
 const matchFilters = css({textAlign: 'center', marginTop:'1em'})
-const left = css({float: 'left', textAlign: 'right', width: 80 * 5 + 'px'})
-const right = css({float: 'right', textAlign: 'left', width: 80 * 5 + 'px'})
+const left = css({
+  float: 'left',
+  textAlign: 'right',
+  width: 80 * 5 + 'px',
+  [mobile]: {
+    width: '100%'
+  }
+})
+const right = css({
+  float: 'right',
+  textAlign: 'left',
+  width: 80 * 5 + 'px',
+  [mobile]: {
+    width: '100%'
+  }
+})
 const flag = css({height: '1em', paddingTop: '5px', margin: '0px 0.5em 0px 0.5em', filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'})
+const flagSides = {
+  left: css({
+    float: 'right',
+    margin: '0 0 0 0.5em'
+  }),
+  right: css({
+    float: 'left',
+    margin: '0 0.5em 0 0'
+  })
+}
 const link = css({color: 'blue', textDecoration: 'underline', cursor: 'pointer', userSelect: 'none'})
