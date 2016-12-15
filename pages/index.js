@@ -184,6 +184,7 @@ export default class extends React.Component {
     <div className={general}>
         <Head>
           <title>Professional Age of Empires 2 calendar</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="static/favicon.ico" />
         </Head>
         <div className={topNoteStyle}>
@@ -280,17 +281,32 @@ const getRows = (worksheetId, keyName) => {
 }
 
 
+// Media query for styles for mobile devices.
+const mobile = '@media (max-width: 768px)'
+
 // Styling
-const general = css({fontFamily: 'Consolas, monaco, monospace', 
-                      width: 80 * 12 + 'px', 
-                      paddingLeft: 10 + 'px', 
-                      paddingRight: 10 + 'px',
-                      margin: 'auto',
-                      color: '#333333'
+const general = css({
+  fontFamily: 'Consolas, monaco, monospace',
+  width: 80 * 12 + 'px',
+  maxWidth: '100%',
+  paddingLeft: 10 + 'px',
+  paddingRight: 10 + 'px',
+  margin: 'auto',
+  color: '#333333',
+  boxSizing: 'border-box'
 })
 
-
-const filterSelect = css({width: 80 * 2 + 'px', marginLeft: 10 + 'px'})
+const filterSelect = css({
+  width: 80 * 2 + 'px',
+  marginLeft: 10 + 'px',
+  [mobile]: {
+    display: 'block',
+    marginLeft: 0,
+    width: '100%',
+    height: 32 + 'px',
+    marginBottom: 10 + 'px'
+  }
+})
 const filterSwitchOptionActive = css({color: '#333333',  textDecoration: 'none'})
 const filterSwitchOption = css({color: '#C8C8C8', cursor: 'pointer'})
 const filterSwitch = css({textAlign: 'center', display:'inline-block', margin: '0em 1em 0em 1em'})
