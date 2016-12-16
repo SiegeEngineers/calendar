@@ -12,13 +12,10 @@ export default class Player extends React.Component {
     if(!p) {
       p = {rating: '?', name: '???', country:'United Nations'}
     }
-    let rating = this.props.dm ? p.dm || p.rating : p.rating
+    let rating = this.props.isDeathmatch ? p.dm || p.rating : p.rating
     const elo = <EloFormat elo={rating || '?'} {...this.props} />
-    const img = <img className={merge(flag, {
-                      float: this.props.side == 'left' ? 'right': 'left',
-                      margin: this.props.side == 'left' ? '0 0 0 0.5em': '0 0.5em 0 0'
-    })} 
-                  src={_.get(d, ['flags', normalize(p.country), 'url'])}/>
+    
+    const img = <img className={merge(flag, flagSides[this.props.side])} src={_.get(d, ['flags', normalize(p.country), 'url'])} />
     
     const adjustForTeamSize = css({fontSize: Math.max(Math.ceil(10 + 20 / this.props.teamSize), 20) + 'pt', marginTop: this.props.idx ? '0.5em': '0em'})
     
@@ -35,3 +32,13 @@ export default class Player extends React.Component {
 }
 
 const player = css({fontSize: '30pt', fontVariant: 'small-caps'})
+const flagSides = {
+   left: css({
+     float: 'right',
+     margin: '0 0 0 0.5em'
+   }),
+   right: css({
+     float: 'left',
+     margin: '0 0.5em 0 0'
+   })
+ }

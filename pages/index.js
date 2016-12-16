@@ -7,11 +7,12 @@ import moment from 'moment-timezone'
 import Head from 'next/head'
 import ReactGA from 'react-ga'
 import {general, miniFlag, topNoteStyle, link, matchFilters, footerStyle, matchStyle} from '../styles/common'
-import Match from '../components/Match'
+import MatchList from '../components/MatchList'
 import FilterSelect from '../components/FilterSelect'
 import FilterSwitch from '../components/FilterSwitch'
 import TimezoneSelector from '../components/TimezoneSelector'
 import TopMatchSelector from '../components/TopMatchSelector'
+import Media from 'react-media'
 import jstz from 'jstz'
 import { normalize } from '../helpers/helpers'
 
@@ -115,6 +116,7 @@ export default class extends React.Component {
     <div className={general}>
         <Head>
           <title>Professional Age of Empires 2 calendar</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="static/favicon.ico" />
         </Head>
         <div className={topNoteStyle}>
@@ -143,7 +145,7 @@ export default class extends React.Component {
             handler={(v)=>this.setState({filterPlayer: v})}/>
         </div>
         {matches.length 
-        ? matches.map(match => (<Match match={match} d={d} timezone={this.state.timezone}/>))
+        ? <MatchList matches={matches} d={d} timezone={this.state.timezone} />
         : <div className={merge([matchStyle, css({textAlign: 'center'})])}> 
           No matches scheduled for these filters at the moment 
         </div>  
