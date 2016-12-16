@@ -12,7 +12,6 @@ import FilterSelect from '../components/FilterSelect'
 import FilterSwitch from '../components/FilterSwitch'
 import TimezoneSelector from '../components/TimezoneSelector'
 import TopMatchSelector from '../components/TopMatchSelector'
-import Media from 'react-media'
 import jstz from 'jstz'
 import { normalize } from '../helpers/helpers'
 
@@ -154,7 +153,13 @@ export default class extends React.Component {
           <hr />
           <span>made by <img className={miniFlag} src={_.get(d, ['flags', normalize('United States of America'), 'url'])}/> patao with love</span>
           <br/>
-          <span>big thx to <img className={miniFlag} src={_.get(d, ['flags', normalize('Netherlands'), 'url'])}/> nimanoe for updates</span>
+          <span>with really amazing help from</span>
+          <br/>
+          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Netherlands'), 'url'])}/> nimanoe</span>
+          <br/>
+          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Australia'), 'url'])}/> robo</span>
+          <br/>
+          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Netherlands'), 'url'])}/> goto-bus-stop</span>
         </div>
     </div>)
   }
