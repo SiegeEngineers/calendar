@@ -2,6 +2,7 @@
   "dependencies": {
     "browser-request": "^0.3.3",
     "google-spreadsheets": "^0.5.1",
+    "is-mobile": "^0.2.2",
     "jstz": "^1.0.7",
     "lodash": "^4.17.2",
     "moment": "^2.16.0",
