@@ -34,6 +34,16 @@ export default class extends React.Component {
   }
   
   componentDidMount() {
+    // Set up function to initialize test capabilities if necessary
+    window.test = (d) => {
+        window.d = d
+        window._ = _
+        window.g = GSpread
+        GSpread({key: '19FQEKyzV7hHqDxJ3BSdNDNmxAa-otUXhmhHoJhv31wg'}, (err, sheet) => {
+            window.sheet = sheet
+        })
+    } 
+    
     moment.locale(window.navigator.language)
     
     this.setState({timezone: localStorage.getItem('timezone') || moment.tz(jstz.determine().name()).zoneAbbr()})
@@ -52,6 +62,7 @@ export default class extends React.Component {
       players: await getRows('oe5g22b', 'name'),
       matches: await getRows('od6'),
       flags: await getRows('ojz6xko', 'name'),
+      events: await getRows('o1vzpub', 'name'),
       streamers: await getRows('o5jbq27', 'name')
     }
   }
@@ -117,6 +128,8 @@ export default class extends React.Component {
   render () {
     const d = this.props
     const matches = this.filterMatches(d)
+    const events = Object.values(d.events)
+    let entries = [...events, ...matches]
     
     // Set timezone
     if(this.state.timezone) {
@@ -155,8 +168,8 @@ export default class extends React.Component {
             options={_.uniq(_.flattenDeep(matches.map((match) => ([...match.team.split(','), ...match.team_2.split(',')]))))}
             handler={(v)=>this.setState({filterPlayer: v})}/>
         </div>
-        {matches.length 
-        ? <MatchList matches={matches} d={d} timezone={this.state.timezone} />
+        {entries.length 
+        ? <MatchList entries={entries} d={d} timezone={this.state.timezone} />
         : <div className={merge([matchStyle, css({textAlign: 'center'})])}> 
           No matches scheduled for these filters at the moment 
         </div>  
@@ -175,17 +188,6 @@ export default class extends React.Component {
         </div>
     </div>)
   }
-}
-
-
-// Experiment
-const test = (d) => {
-    window.d = d
-    window._ = _
-    window.g = GSpread
-    GSpread({key: '19FQEKyzV7hHqDxJ3BSdNDNmxAa-otUXhmhHoJhv31wg'}, (err, sheet) => {
-        window.sheet = sheet
-    })
 }
 
 // Data fetchers

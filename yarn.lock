@@ -1580,6 +1580,10 @@ is-glob@^3.0.0:
   dependencies:
     is-extglob "^2.1.0"
 
+is-mobile@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/is-mobile/-/is-mobile-0.2.2.tgz#0e2e006d99ed2c2155b761df80f2a3619ae2ad9f"
+
 is-my-json-valid@^2.12.4:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/is-my-json-valid/-/is-my-json-valid-2.15.0.tgz#936edda3ca3c211fd98f3b2d3e08da43f7b2915b"

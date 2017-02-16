@@ -3,7 +3,8 @@ import Media from 'react-media'
 import { mobileBreakpoint } from '../styles/common'
 import MatchMobile from './MatchMobile'
 import MatchDesktop from './MatchDesktop'
-
+import EventMobile from './EventMobile'
+import EventDesktop from './EventDesktop'
 
 export default class MatchList extends React.Component {
   static contextTypes = {
@@ -13,7 +14,7 @@ export default class MatchList extends React.Component {
 
   render () {
     const { isMobileAgent } = this.context
-    const { d, timezone, matches } = this.props
+    const { d, timezone, entries } = this.props
     return (
       <Media query={mobileBreakpoint}>
         {isMobileViewport => {
@@ -22,14 +23,16 @@ export default class MatchList extends React.Component {
           const isMobile = isMobileAgent !== null ? isMobileAgent : isMobileViewport
 
           const MatchComponent = isMobile ? MatchMobile : MatchDesktop
+          const EventComponent = isMobile ? EventMobile : EventDesktop
           return (
             <div>
-              {matches.map(match => (
-                <MatchComponent
-                  d={d}
-                  match={match}
-                  timezone={timezone} />
-              ))}
+              {entries.map(entry => {
+                if (entry.name) {
+                  return <EventComponent d={d} event={entry} timezone={timezone} />
+                } else {
+                  return <MatchComponent d={d} match={entry} timezone={timezone} />
+                }
+              })}
             </div>
           )
         }}
