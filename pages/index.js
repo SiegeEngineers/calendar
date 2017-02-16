@@ -6,6 +6,7 @@ import GSpread from 'google-spreadsheets'
 import moment from 'moment-timezone'
 import Head from 'next/head'
 import ReactGA from 'react-ga'
+import isMobile from 'is-mobile'
 import {general, miniFlag, topNoteStyle, link, matchFilters, footerStyle, matchStyle} from '../styles/common'
 import MatchList from '../components/MatchList'
 import FilterSelect from '../components/FilterSelect'
@@ -47,10 +48,21 @@ export default class extends React.Component {
     // To find new ID, use window.sheet
     return {
       server: req ? true : false,
+      isMobileAgent: req ? isMobile(req) : null,
       players: await getRows('oe5g22b', 'name'),
       matches: await getRows('od6'),
       flags: await getRows('ojz6xko', 'name'),
       streamers: await getRows('o5jbq27', 'name')
+    }
+  }
+
+  static childContextTypes = {
+    isMobileAgent: React.PropTypes.bool
+  }
+
+  getChildContext () {
+    return {
+      isMobileAgent: this.props.isMobileAgent
     }
   }
 
