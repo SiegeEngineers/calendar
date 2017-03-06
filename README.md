@@ -14,6 +14,10 @@
   - Run with  `npm run dev`. Hot reloading is enabled for development.
   - Feel free to open Github issues, I'll check them!
 
+#### Deploy
+  - `now`
+  - `now alias <id> aoe2calendar.com`
+
 ##### Plan
   - The goal for the site itself is to eventually add more features like VoDs as well as integrations with other AoE2 projects
   - A side-goal for the project is to drive an event calendar on reddit.com and possibly for aoczone.net / streamers as well

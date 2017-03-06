@@ -2158,6 +2158,10 @@ process@~0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
 
+promise-props@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/promise-props/-/promise-props-1.0.0.tgz#e4c673e65a9b0339ded85b1c5ad47e34349c5a1c"
+
 promise@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.1.1.tgz#489654c692616b8aa55b0724fa809bb7db49c5bf"
