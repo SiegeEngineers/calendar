@@ -1,0 +1,6 @@
+version: '2'
+services:
+    aeo2calendar:
+        build: .
+        ports:
+        - 80:3000

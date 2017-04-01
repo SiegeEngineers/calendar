@@ -1,0 +1,10 @@
+version: '2'
+services:
+    aeo2calendar:
+        image: damianijr/aeo2calendar
+        ports:
+        - 80:3000
+        size: s4
+        fip: 209.177.91.229
+        environment:
+        - NODE_ENV=prod
