@@ -1,2 +1,4 @@
 node_modules/
 .next
+*.lock
+*.DS_Store

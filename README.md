@@ -7,16 +7,27 @@
 
 #### Contributing
   - AoE2calendar is  written in React, specifically [next.js](https://github.com/zeit/next.js/)
-  - Collaborating:
+  - *Collaborating:*
     - there's a small Discord group to discuss planning, ping me on Discord (patão#8153) and I'll add you :)
     - to get access to the source sheet just ping me on Discord (patão#8153) or AoCzone.net (patao)
-  - You can use `yarn install` or `npm install` to install - I prefer `yarn` for speed
-  - Run with  `npm run dev`. Hot reloading is enabled for development.
+  - *Running:*
+    - Using NPM:
+        - You can use `yarn install` or `npm install` to install dependencies;
+        - Run `npm run dev`;
+    - Using docker: `docker-compose up`
   - Feel free to open Github issues, I'll check them!
 
 #### Deploy
-  - `now`
-  - `now alias <id> aoe2calendar.com`
+- AoE2calendar using [hyper.sh](https://hyper.sh) as production environment, to deploy a new version is required configure [hyper console](https://docs.hyper.sh/GettingStarted/install.html).
+- Deploying all containers, execute `npm run now`
+  - Containers will be upload to docker-hub;
+  - Hyper.sh update images;
+  - Hyper.sh destroy and create new containers with new version;
+- To deploy specifically container execute:
+  - `npm run now <container>`
+  - Example:
+      - `npm run now aeo2calendar` - Deploy web app;
+      - `npm run now aeo2calendar-proxy` - Deploy reverse proxy;
 
 ##### Plan
   - The goal for the site itself is to eventually add more features like VoDs as well as integrations with other AoE2 projects

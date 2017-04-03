@@ -1,1 +1,8 @@
-node_modules/*
+node_modules/
+deploy/
+proxy/
+.next/
+.git
+.gitignore
+Dockerfile*
+*.lock
