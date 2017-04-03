@@ -1,5 +1,7 @@
-node_modules/*
-.next
+node_modules/
+deploy/
+proxy/
+.next/
 .git
 .gitignore
 Dockerfile*

@@ -12,10 +12,10 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN yarn install
+RUN yarn install && npm run build
 
 # App port
 EXPOSE 3000
 
 # Running app!
-CMD npm run build && npm run start
+ENTRYPOINT npm run start
