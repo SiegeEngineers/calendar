@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 #!/bin/bash
 
 cd deploy/
 
 # Default images
 images=(aoe2calendar aoe2calendar-proxy)
-=======
-#!/bin/sh
-cd deploy/
-CERTIFICATES="../proxy/certificates/"
->>>>>>> f625570fe7260e5a5b220c4e765692a79f75724f
 
 # Confirm new deploy
 read -r -p "Confirm new deploy? [Y] " response
@@ -23,26 +17,8 @@ fi
 if [[ "$@" != '' ]]
 then
     images=($@)
-<<<<<<< HEAD
 fi
 
-=======
-else
-    images=(aoe2calendar aoe2calendar-proxy)
-fi
-
-# check certificates from proxy
-if [[ " ${images[*]} " == *"$aeo2calendar-proxy"* ]]; then
-    if [[ "$(ls -A $CERTIFICATES)" == '' ]]; then
-        echo "No certificates for deploy aeo2calendar-proxy, skipping it"
-        delete=(aoe2calendar-proxy)
-        images=("${images[@]/$delete}")
-        echo $images
-    fi
-fi
-
-
->>>>>>> f625570fe7260e5a5b220c4e765692a79f75724f
 for item in ${images[*]}
 do
     echo "* docker-hub: Pushing ${item} to docker-hub"

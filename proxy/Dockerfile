@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 FROM alpine
 
 # Install caddy and dependencies
@@ -23,19 +22,3 @@ ADD ./.caddy /root/.caddy
 # Caddy start
 ENTRYPOINT ["/usr/bin/caddy"]
 CMD ["--conf", "/etc/Caddyfile"]
-=======
-FROM nginx:alpine
-
-# Copy nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy certificates
-RUN mkdir /etc/nginx/certificates
-COPY ./certificates /etc/nginx/certificates
-
-# Ports
-EXPOSE 80 443
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
->>>>>>> f625570fe7260e5a5b220c4e765692a79f75724f
