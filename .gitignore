@@ -2,3 +2,6 @@ node_modules/
 .next
 *.lock
 *.DS_Store
+proxy/.caddy/*
+!proxy/.caddy/.keep
+*.orig

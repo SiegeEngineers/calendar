@@ -1,0 +1,17 @@
+# Caddy server config to prod environment
+www.aoe2calendar.com, aoe2calendar.com {
+    # proxy to app
+    proxy / aoe2calendar:3000 {
+        # headers
+        transparent
+    }
+
+    # e-mail tls
+    tls contact@aoe2calendar.com
+
+    # compress
+    gzip
+
+    errors stderr
+    log / stdout "{remote} - [{when}] \"{method} {uri} {proto}\" {status} {size} {latency} {request}"
+}

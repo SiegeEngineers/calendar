@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+
 cd deploy/
-CERTIFICATES="../proxy/certificates/"
+
+# Default images
+images=(aoe2calendar aoe2calendar-proxy)
 
 # Confirm new deploy
 read -r -p "Confirm new deploy? [Y] " response
@@ -14,20 +17,7 @@ fi
 if [[ "$@" != '' ]]
 then
     images=($@)
-else
-    images=(aoe2calendar aoe2calendar-proxy)
 fi
-
-# check certificates from proxy
-if [[ " ${images[*]} " == *"$aeo2calendar-proxy"* ]]; then
-    if [[ "$(ls -A $CERTIFICATES)" == '' ]]; then
-        echo "No certificates for deploy aeo2calendar-proxy, skipping it"
-        delete=(aoe2calendar-proxy)
-        images=("${images[@]/$delete}")
-        echo $images
-    fi
-fi
-
 
 for item in ${images[*]}
 do

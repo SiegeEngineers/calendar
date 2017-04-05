@@ -1,0 +1,17 @@
+# Caddy server config to dev environment
+:80 {
+    # proxy to app
+    proxy / aoe2calendar:3000 {
+        # headers
+        transparent
+    }
+
+    # self signed tls
+    tls self_signed
+
+    # compress
+    gzip
+
+    errors stderr
+    log / stdout "{remote} - [{when}] \"{method} {uri} {proto}\" {status} {size} {latency} {request}"
+}

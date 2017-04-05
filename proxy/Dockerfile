@@ -1,14 +1,24 @@
-FROM nginx:alpine
+FROM alpine
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy certificates
-RUN mkdir /etc/nginx/certificates
-COPY ./certificates /etc/nginx/certificates
+# Install caddy and dependencies
+RUN apk add --no-cache openssh-client git tar curl
+RUN curl --silent --show-error --fail --location \
+      --header "Accept: application/tar+gzip, application/x-gzip, application/octet-stream" -o - \
+      "https://caddyserver.com/download/build?os=linux&arch=amd64&features=" \
+    | tar --no-same-owner -C /usr/bin/ -xz caddy \
+ && chmod 0755 /usr/bin/caddy \
+ && mkdir /root/.caddy
 
 # Ports
-EXPOSE 80 443
+EXPOSE 80 443 2015
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Caddy config (prod & dev)
+ADD ./Caddyfile /etc/Caddyfile
+ADD ./Caddyfile_dev /etc/Caddyfile_dev
+
+# Caddy certifies
+ADD ./.caddy /root/.caddy
+
+# Caddy start
+ENTRYPOINT ["/usr/bin/caddy"]
+CMD ["--conf", "/etc/Caddyfile"]
