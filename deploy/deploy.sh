@@ -22,15 +22,15 @@ fi
 for item in ${images[*]}
 do
     echo "* docker-hub: Pushing ${item} to docker-hub"
-    docker tag ${item} damianijr/${item}:latest
-    docker push damianijr/${item}:latest
+    docker tag ${item} aoe2calendar/${item}:latest
+    docker push aoe2calendar/${item}:latest
 done
 
 
 for item in ${images[*]}
 do
     echo "* hyper.sh: Pulling images from docker-hub"
-    hyper pull damianijr/${item}:latest
+    hyper pull aoe2calendar/${item}:latest
 done
 
 

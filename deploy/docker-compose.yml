@@ -2,7 +2,7 @@ version: '2'
 services:
     aoe2calendar-proxy:
         container_name: aoe2calendar-proxy
-        image: damianijr/aoe2calendar-proxy
+        image: aoe2calendar/aoe2calendar-proxy
         ports:
         - 80:80
         - 443:443
@@ -14,7 +14,7 @@ services:
         - aoe2calendar
     aoe2calendar:
         container_name: aoe2calendar
-        image: damianijr/aoe2calendar
+        image: aoe2calendar/aoe2calendar
         ports:
         - 3000:3000
         size: s3
