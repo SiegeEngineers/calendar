@@ -21,19 +21,21 @@ export default class EventDesktop extends React.Component {
           <MatchTime time={event.nextstarttime} timezone={timezone} />
         </div>
         <EventPlayerList d={d} players={rightPlayers} event={event} largestTeamSize={Math.max(leftPlayers, rightPlayers)} side='right'/>
-        <div className={merge(eventStyle, css({fontSize: '12pt'}))}>
-          {event.name} ${event.prizepool} <br /> {event.humanreadabledates}
-        </div>
-        <div className={eventStyle}>
-          <a href={event.brackets}>Brackets</a> - <a href={event.settings}>Settings</a>
+        <div className={merge(eventStyle)}>
+          <span className={merge(css({fontSize: '12pt'}))}>
+            {event.name}{event.prizepool ? ' $' + event.prizepool: null }
+          </span>
+          {event.brackets || event.settings ? 
+            <span> (
+              {event.brackets ? <a href={event.brackets}>Brackets</a> : null}
+              {event.brackets && event.settings ? ', ' : null}
+              {event.settings ? <a href={event.settings}>Settings</a> : null}
+            )</span> : null}
+          <br />
+          {event.humanreadabledates ? event.humanreadabledates : null}
         </div>
         <MatchStreams d={d} streams={event.streams} />
       </div>
-        /*
-        <Team d={d} team={match.team_2} match={match} side='right'/>
-
-        
-      </div>*/
     )
   }
 }

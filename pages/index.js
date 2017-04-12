@@ -177,9 +177,11 @@ export default class extends React.Component {
         }
         <div className={footerStyle}>
           <hr />
-          <span>made by <img className={miniFlag} src={_.get(d, ['flags', normalize('United States of America'), 'url'])}/> patao with love</span>
+          <span>made w/ love by <img className={miniFlag} src={_.get(d, ['flags', normalize('United States of America'), 'url'])}/>
+            &nbsp;<a href="https://github.com/coffenbacher">patao</a>, source available at <a href="https://github.com/coffenbacher/calendar">github</a>
+          </span>
           <br/>
-          <span>with really amazing help from</span>
+          <span>improved with really amazing help from</span>
           <br/>
           <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Netherlands'), 'url'])}/> nimanoe</span>
           <br/>

@@ -9,7 +9,6 @@ import Team from './Team'
 export default class EventMobile extends React.Component {
   render () {
     const { d, event, timezone } = this.props
-
     return (
       <div className={matchStyle}>
         <hr className={matchDividerStyle}/>
@@ -18,10 +17,16 @@ export default class EventMobile extends React.Component {
           <MatchTime time={event.nextstarttime} timezone={timezone} />
         </div>
         <div className={eventStyle}>
-          <a href={event.brackets}>Brackets</a> - <a href={event.settings}>Settings</a>
+            {event.brackets || event.settings ? 
+            <span> (
+              {event.brackets ? <a href={event.brackets}>Brackets</a> : null}
+              {event.brackets && event.settings ? ', ' : null}
+              {event.settings ? <a href={event.settings}>Settings</a> : null}
+            )</span> : null}
         </div>
         <div className={merge(eventStyle, css({fontSize: '12pt'}))}>
-          {event.name} ${event.prizepool} <br /> {event.humanreadabledates}
+          {event.name}{event.prizepool ? ' $' + event.prizepool: null } <br />
+          {event.humanreadabledates ? event.humanreadabledates : null}
         </div>
         <MatchStreams d={d} streams={event.streams} />
       </div>

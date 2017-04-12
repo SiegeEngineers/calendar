@@ -24,6 +24,8 @@ export default class MatchList extends React.Component {
 
           const MatchComponent = isMobile ? MatchMobile : MatchDesktop
           const EventComponent = isMobile ? EventMobile : EventDesktop
+          const toDate = (e) => new Date((e.time || e.nextstarttime) + ' UTC')
+          const sorted = entries.sort((a, b) => (toDate(a) - toDate(b)))
           return (
             <div>
               {entries.map(entry => {
