@@ -21,4 +21,4 @@ ADD ./.caddy /root/.caddy
 
 # Caddy start
 ENTRYPOINT ["/usr/bin/caddy"]
-CMD ["--conf", "/etc/Caddyfile"]
+CMD ["-agree", "--conf", "/etc/Caddyfile"]

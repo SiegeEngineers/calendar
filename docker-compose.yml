@@ -11,7 +11,7 @@ services:
         - aoe2calendar
         depends_on:
         - aoe2calendar
-        command: "--conf /etc/Caddyfile_dev"
+        command: "-agree --conf /etc/Caddyfile_dev"
     aoe2calendar:
         container_name: aoe2calendar
         image: aoe2calendar
