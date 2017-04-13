@@ -4,6 +4,7 @@ import { divider, matchStyle } from '../styles/common'
 import MatchTime from './MatchTime'
 import MatchStreams from './MatchStreams'
 import EventPlayerList from './EventPlayerList'
+import CalendarExporter from './CalendarExporter'
 
 // Match display on a landscape-style screen.
 export default class EventDesktop extends React.Component {
@@ -19,6 +20,12 @@ export default class EventDesktop extends React.Component {
         <div className={divider}>
           <img src={event.logo} style={{width: '100px'}}/>
           <MatchTime time={event.nextstarttime} timezone={timezone} />
+          <CalendarExporter
+                title={event.name}
+                startTime={new Date(event.nextstarttime)} endTime={new Date(event.endtime)}
+                content={event.content}
+                location={event.settings}
+          />
         </div>
         <EventPlayerList d={d} players={rightPlayers} event={event} largestTeamSize={Math.max(leftPlayers, rightPlayers)} side='right'/>
         <div className={merge(eventStyle, css({fontSize: '12pt'}))}>
@@ -29,11 +36,6 @@ export default class EventDesktop extends React.Component {
         </div>
         <MatchStreams d={d} streams={event.streams} />
       </div>
-        /*
-        <Team d={d} team={match.team_2} match={match} side='right'/>
-
-        
-      </div>*/
     )
   }
 }

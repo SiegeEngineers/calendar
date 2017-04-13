@@ -47,3 +47,55 @@ export const link = css({color: 'blue', textDecoration: 'underline', cursor: 'po
 export const matchStyle = css({clear: 'both', paddingTop: '2em'})
 export const mobileMatchTimeStyle = merge([divider, css({ width: '100%' })])
 
+export const dropdown = css({
+    position: 'relative',
+    display: 'inline-block',
+    ':hover > ul': {
+        display: 'inline-block',
+    }
+});
+
+export const dropdownContent = css({
+    display: 'none',
+    position: 'absolute',
+    left: '-200%',
+    top: '30px',
+    margin: '0',
+    padding: '0',
+    minWidth: '160px',
+    backgroundColor: '#f9f9f9',
+    boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+    padding: '5px',
+    zIndex: '1',
+});
+
+export const dropDownLink = css({
+    display: 'inline-block',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    width: '100%'
+})
+
+export const dropdownItem = css({
+    listStyle: 'none',
+    height: '32px',
+    textAlign: 'left',
+    marginBottom: '5px'
+})
+
+export const dropdownSvg = css({
+    width: '32px',
+    height: '32px',
+    maxWidth: '32px',
+    maxHeight: '32px'
+})
+
+export const calendarExporText = css({
+    fontSize: '12px',
+    marginLeft: '5px',
+    height: '32px',
+    lineHeight: '32px',
+    verticalAlign: 'middle',
+    display: 'inline-block',
+    marginTop: '-15px'
+})

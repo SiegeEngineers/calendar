@@ -15,7 +15,7 @@ export default class EventPlayerList extends React.Component {
     return <div className={merge(teamStyle)}>
       {
         this.props.players.map((p, idx) => 
-          <Player player={_.get(d, ['players', normalize(p)])} 
+          <Player key={idx} player={_.get(d, ['players', normalize(p)])} 
             isDeathmatch={isDeathmatch}
             idx={idx} 
             teamSize={largestTeamSize}

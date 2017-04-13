@@ -4,6 +4,8 @@ import { divider, matchStyle } from '../styles/common'
 import MatchTime from './MatchTime'
 import MatchStreams from './MatchStreams'
 import Team from './Team'
+import moment from 'moment-timezone'
+import CalendarExporter from './CalendarExporter'
 
 // Match display on a landscape-style screen.
 export default class MatchMobile extends React.Component {
@@ -15,6 +17,12 @@ export default class MatchMobile extends React.Component {
         <hr className={matchDividerStyle}/>
         <div className={mobileMatchTimeStyle}>
           <MatchTime time={match.time} timezone={timezone} />
+          <CalendarExporter
+                title={match.event + ": " + match.team + " vs " + match.team_2 + " (" + match.round + ")"}
+                startTime={new Date(match.time)} endTime={moment(new Date(match.time)).add(1.5, 'hours').toString()}
+                content={match.content}
+                location={match.schedulingthread}
+          />
         </div>
         <div className={eventStyle}>
           {match.recorded == 'TRUE' 
