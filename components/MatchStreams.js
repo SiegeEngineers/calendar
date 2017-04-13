@@ -13,7 +13,7 @@ export default class MatchStreams extends React.Component {
           .map(stream => _.get(d, ['streamers', normalize(stream)]))
           .filter(stream => stream !== undefined)
           .map((stream) => (
-            <Stream stream={stream} />
+            <Stream key={stream.name} stream={stream} />
           ))
         }
       </div>

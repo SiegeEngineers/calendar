@@ -188,6 +188,8 @@ export default class extends React.Component {
           <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Australia'), 'url'])}/> robo</span>
           <br/>
           <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Netherlands'), 'url'])}/> goto-bus-stop</span>
+          <br/>
+          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Brazil'), 'url'])}/> damianijr</span>
         </div>
     </div>)
   }
@@ -216,5 +218,3 @@ const getRows = (worksheetId, keyName) => {
     })
   })
 }
-
-

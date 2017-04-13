@@ -6,7 +6,7 @@ export default class FilterSelect extends React.Component {
     return <select className={filterSelect} value={this.props.selected} onChange={(e) => this.props.handler(e.target.value)}>
       <option value={''}>{this.props.default}</option>
       {this.props.options.map(option => (
-        <option value={option}>{option}</option>
+        <option key={option} value={option}>{option}</option>
       ))}
     </select>
   }

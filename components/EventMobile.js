@@ -4,6 +4,7 @@ import { divider, matchStyle } from '../styles/common'
 import MatchTime from './MatchTime'
 import MatchStreams from './MatchStreams'
 import Team from './Team'
+import CalendarExporter from './CalendarExporter'
 
 // Match display on a landscape-style screen.
 export default class EventMobile extends React.Component {
@@ -15,6 +16,12 @@ export default class EventMobile extends React.Component {
         <div className={mobileMatchTimeStyle}>
           <img src={event.logo} style={{width: '100px'}}/>
           <MatchTime time={event.nextstarttime} timezone={timezone} />
+          <CalendarExporter
+                title={event.name}
+                startTime={new Date(event.nextstarttime)} endTime={new Date(event.endtime)}
+                content={event.content}
+                location={event.settings}
+          />
         </div>
         <div className={eventStyle}>
             {event.brackets || event.settings ? 
