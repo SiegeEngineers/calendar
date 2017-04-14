@@ -32,7 +32,7 @@ export default class MatchList extends React.Component {
                 if (entry.name) {
                   return <EventComponent key={entry.name} d={d} event={entry} timezone={timezone} />
                 } else {
-                  return <MatchComponent key={entry.event} d={d} match={entry} timezone={timezone} />
+                  return <MatchComponent key={entry.event + entry.round + entry.team + entry.team_2} d={d} match={entry} timezone={timezone} />
                 }
               })}
             </div>
