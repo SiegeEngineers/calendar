@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
     aoe2calendar-proxy:
         container_name: aoe2calendar-proxy
@@ -7,8 +7,8 @@ services:
         ports:
         - 80:80
         - 443:443
-        links:
-        - aoe2calendar
+        networks:
+        - backend
         depends_on:
         - aoe2calendar
         command: "-agree --conf /etc/Caddyfile_dev"
@@ -21,6 +21,10 @@ services:
         environment:
         - NODE_ENV=DEV
         entrypoint: "npm run dev"
+        networks:
+        - backend
         volumes:
         - .:/app
         - /app/node_modules/
+networks:
+  backend:
