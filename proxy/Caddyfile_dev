@@ -1,5 +1,12 @@
 # Caddy server config to dev environment
 :80 {
+    # adding headers
+    header / {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        -Server
+    }
     # proxy to app
     proxy / aoe2calendar:3000 {
         # headers
