@@ -1,0 +1,24 @@
+version: '3'
+services:
+    aoe2calendar-proxy:
+        container_name: aoe2calendar-proxy
+        image: aoe2calendar/-proxy
+        ports:
+        - 80:80
+        - 443:443
+        networks:
+        - backend
+        depends_on:
+        - aoe2calendar
+        command: "-agree --conf /etc/Caddyfile"
+    aoe2calendar:
+        container_name: aoe2calendar
+        image: aoe2calendar/aoe2calendar
+        ports:
+        - 3000:3000
+        environment:
+        - NODE_ENV=prod
+        networks:
+        - backend
+networks:
+  backend:
