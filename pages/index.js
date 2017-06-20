@@ -190,6 +190,8 @@ export default class extends React.Component {
           <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Netherlands'), 'url'])}/> goto-bus-stop</span>
           <br/>
           <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Brazil'), 'url'])}/> damianijr</span>
+          <br/>
+          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Japan'), 'url'])}/> iPhone</span>
         </div>
     </div>)
   }
