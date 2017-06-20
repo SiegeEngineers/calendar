@@ -13,7 +13,6 @@ import MatchList from '../components/MatchList'
 import FilterSelect from '../components/FilterSelect'
 import FilterSwitch from '../components/FilterSwitch'
 import TimezoneSelector from '../components/TimezoneSelector'
-import TopMatchSelector from '../components/TopMatchSelector'
 import jstz from 'jstz'
 import { normalize } from '../helpers/helpers'
 
@@ -24,13 +23,12 @@ export default class extends React.Component {
     super(props);
     this.state ={
        timezone: false,
-       filter2k: true,
        filterPro: true,
        filterUpc: true,
        filterEvent: false,
        filterPlayer: false,
-       filterLive: false,
-       showAll: false
+       filterTop: false,
+       showTop: false
      };
   }
   
@@ -64,7 +62,8 @@ export default class extends React.Component {
       matches: getRows('od6'),
       flags: getRows('ojz6xko', 'name'),
       events: getRows('o1vzpub', 'name'),
-      streamers: getRows('o5jbq27', 'name')
+      streamers: getRows('o5jbq27', 'name'),
+      cms: (req.url.indexOf("test") > -1) ? getRows('out9nrp', 'name') : getRows('orxrubb', 'name')
     })
   }
 
@@ -91,18 +90,9 @@ export default class extends React.Component {
     
     if (this.state.filterPlayer) {
       results = results.filter((match) => (match.team.indexOf(this.state.filterPlayer) > -1 || match.team_2.indexOf(this.state.filterPlayer) > -1))
-    } else {
-      // if(this.state.filter2k) {
-      //   const players2k = _.values(d.players).filter((p) => ((p.rating || ' ')[0] == '2')).map((p) => normalize(p.name))
-      //   const getRating = (p) => (parseInt(_.get(d.players, [normalize(p), 'rating'], '1600')))
-      //   const getAverage = (arr) => (arr.reduce((x, y)=>x+y,0) / arr.length)
-        
-      //   results = results.filter((match) => 
-      //     getAverage((match.team.split(',').map(getRating).concat(match.team_2.split(',').map(getRating)))) > 2000)
-      // }
     }
     
-    if (!this.state.showAll) {
+    if (this.state.filterTop) {
       // Helpers
       const getRating = (p, t) => (parseInt(_.get(d.players, [normalize(p), t], '1600')))
       const getAverage = (arr) => (arr.reduce((x, y)=>x+y,0) / arr.length)
@@ -114,10 +104,6 @@ export default class extends React.Component {
         return ((average >= 2000) || match.streams)
       })
     }
-    
-    // if (this.state.filterLive) {
-    //   results = results.filter((match) => (match.recorded !== 'TRUE'))
-    // }
     
     // Remove expired matches
     const expired = moment().subtract(1.5, 'hours')
@@ -136,7 +122,9 @@ export default class extends React.Component {
     if(this.state.timezone) {
       moment.tz.setDefault(this.state.timezone)
     }
-
+    
+    const headerCMS = d.cms.header
+    
     return (
     <div className={general}>
         <Head>
@@ -150,12 +138,13 @@ export default class extends React.Component {
           <br/>{this.state.timezone ? 'all times in ' + this.state.timezone : ''}
           <TimezoneSelector active={this.state.timezone} toggle={(tz) => this.setState({timezone: tz})} />
         </div>
+        { d.cms.header ? <div dangerouslySetInnerHTML={{__html: d.cms.header.content}} />: null}
         <hr />
         <div className={matchFilters}>
-          <FilterSelect default='top games only' 
-            selected={this.state.showAll} 
-            options={['all']} 
-            handler={(v)=>this.setState({showAll: v})}/>
+          <FilterSelect default='all levels'
+            selected={this.state.filterTop}
+            options={['top games only']}
+            handler={(v)=>this.setState({filterTop: v})}/>
           <FilterSelect default='all events' 
             selected={this.state.filterEvent} 
             options={_.uniq(matches.map((match) => (match.event)))} 
@@ -191,7 +180,7 @@ export default class extends React.Component {
           <br/>
           <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Brazil'), 'url'])}/> damianijr</span>
           <br/>
-          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Japan'), 'url'])}/> iPhone</span>
+          <span><img className={miniFlag} src={_.get(d, ['flags', normalize('Japan'), 'url'])} style={{boxShadow: '1px 1px 1px #888888'}}/> iPhone</span>
         </div>
     </div>)
   }
