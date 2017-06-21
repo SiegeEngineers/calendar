@@ -2,7 +2,7 @@ version: '3'
 services:
     aoe2calendar-proxy:
         container_name: aoe2calendar-proxy
-        image: aoe2calendar/-proxy
+        image: aoe2calendar/aoe2calendar-proxy
         ports:
         - 80:80
         - 443:443
