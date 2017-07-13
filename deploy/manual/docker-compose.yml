@@ -20,5 +20,6 @@ services:
         - NODE_ENV=prod
         networks:
         - backend
+        restart: 'always'
 networks:
   backend:

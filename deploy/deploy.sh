@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd deploy/
+# cd deploy/
 
 # Default images
 images=(aoe2calendar aoe2calendar-proxy)
