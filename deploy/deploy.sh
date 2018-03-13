@@ -1,6 +1,13 @@
 #!/bin/bash
 
+# in root:
+# docker-compose build
 # cd deploy/
+# ./deploy.sh
+
+# on server, docker-compose pull in root
+# then do docker-compose up -d in manual/
+# then make sure ical service is running on :3001
 
 # Default images
 images=(aoe2calendar aoe2calendar-proxy)
@@ -26,20 +33,5 @@ do
     docker push aoe2calendar/${item}:latest
 done
 
-
-for item in ${images[*]}
-do
-    echo "* hyper.sh: Pulling images from docker-hub"
-    hyper pull aoe2calendar/${item}:latest
-done
-
-
-# stop current containers
-echo "Stopping current container(s)"
-hyper compose down
-
-# run new container with new version
-echo "Running new container(s)"
-hyper compose up -d
 
 echo "Deploy finished!"
