@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "now" : "./deploy/deploy.sh"
+    "start": "next start -p",
+    "now": "./deploy/deploy.sh"
   }
 }

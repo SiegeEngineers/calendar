@@ -14,8 +14,5 @@ COPY . .
 # Install dependencies
 RUN yarn install && npm run build
 
-# App port
-EXPOSE 3000
-
 # Running app!
-ENTRYPOINT npm run start
+ENTRYPOINT npm run start -p $(echo $PORT | tr -d '"')
