@@ -4,7 +4,7 @@
     "google-spreadsheets": "^0.5.1",
     "is-mobile": "^0.2.2",
     "jstz": "^1.0.7",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.19",
     "moment": "^2.16.0",
     "moment-timezone": "^0.5.9",
     "next": "^1.1.1",
